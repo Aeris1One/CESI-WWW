@@ -56,3 +56,6 @@ avr-gcc \
       -std=gnu17 -Os -Wall -DF_CPU=16000000 -mmcu=atmega328p \
       $o_file_list \
       -o "$build_dir/output.elf"
+
+echo 'Étape 4 : Création du fichier .ihex'
+avr-objcopy -O ihex -R .eeprom "$build_dir/output.elf" "$build_dir/output.hex"
