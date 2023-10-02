@@ -1,1 +1,1 @@
-void debugQuickly;
+void debugQuickly();

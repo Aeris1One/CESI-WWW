@@ -32,3 +32,10 @@ if [ ! -d "$tmp_dir" ]; then
 else
   rm -rfv "${tmp_dir:?}/"*
 fi
+
+for c in "$root_dir/"*.c; do
+  avr-gcc -c \
+      -std=gnu17 -Os -Wall -DF_CPU=16000000 -mmcu=atmega328p \
+      "$c" \
+      -o "$tmp_dir/${c%.*}.o"
+done
