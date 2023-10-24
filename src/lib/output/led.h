@@ -2,8 +2,8 @@
 // Created by charlesp on 10/10/23.
 //
 
-#ifndef WWW_OUTPUT_H
-#define WWW_OUTPUT_H
+#ifndef WWW_LED_H
+#define WWW_LED_H
 
 #include <Arduino.h>
 #include <stdint.h>
@@ -24,4 +24,4 @@ private:
     bool state;
 };
 
-#endif //WWW_OUTPUT_H
+#endif //WWW_LED_H
