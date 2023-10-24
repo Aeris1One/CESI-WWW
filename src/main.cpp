@@ -28,10 +28,6 @@ void setup() {
     while (millis() < 5000) {
         input.update();
         if (input.is_red_pressed()) {
-            output.set_mode(7);
-            return;
-        }
-        if (input.is_green_pressed()) {
             output.set_mode(2);
             return;
         }
@@ -44,7 +40,6 @@ void loop() {
     output.update();
     input.update();
     if (input.was_red_pressed_for(5000)) {
-        //Serial.println("Red pressed for 5 secs");
         output.set_mode(4);
         return;
     }
