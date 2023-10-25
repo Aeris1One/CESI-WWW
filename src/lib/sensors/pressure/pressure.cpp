@@ -1,17 +1,14 @@
 #include <Arduino.h>                                            // Initialisation des différentes bibliothèques 
 #include <Wire.h>
 #include <math.h>
-#include <BME280I2C.h> 
+#include <BME280.h> 
 
-BME280I2C bme;
-bme.begin();
+bme.begin();                                                    // Lancement du capteur 
 
 float get_pressure(){                                          
     
     const int broche_capteur = A0;                              // Définition des broches de connexion du capteur
-    int valeur_capteur = bme.read(pres) ;                       // Lecture de la valeur du capteur
-    float pression = valeur_capteur * 25 / 1023;                // Conversion de la valeur du capteur en pression
-
+    float pression = bme.pres() ;                               // Lecture de la valeur du capteur
     delay(1000);
-    return pression;
+    return pression;                                            // Retour de la valeur de la pression 
 }
