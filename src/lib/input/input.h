@@ -6,7 +6,6 @@
 #define WWW_INPUT_H
 
 #include <Arduino.h>
-#include <stdint.h>
 
 class Input {
 public:
@@ -14,19 +13,27 @@ public:
 
     void update();
 
-    bool is_red_pressed();
+    void resetFlags();
 
-    bool was_red_pressed_for(uint32_t milliseconds);
+    bool red_short_flag_raised();
 
-    bool is_green_pressed();
+    bool red_long_flag_raised();
 
-    bool was_green_pressed_for(uint32_t milliseconds);
+    bool green_short_flag_raised();
+
+    bool green_long_flag_raised();
 
 private:
     uint8_t buttonRed;
     uint8_t buttonGreen;
-    uint32_t redState;
-    uint32_t greenState;
+
+    uint8_t redState;
+    uint8_t greenState;
+
+    bool red_short_flag;
+    bool red_long_flag;
+    bool green_short_flag;
+    bool green_long_flag;
 };
 
 #endif //WWW_INPUT_H

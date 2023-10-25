@@ -27,6 +27,7 @@ Output output(LED_CIN, LED_DIN);
 
 void timer1_callback() {
     output.update();
+    input.update();
 }
 
 void setup() {
@@ -47,6 +48,15 @@ void setup() {
 
 void loop() {
     Serial.println("Hello, world!");
-    while (1);
-    Serial.println("Goodbye, world!");
+    Serial.print("Red short : ");
+    Serial.println(input.red_short_flag_raised());
+    Serial.print("Red long : ");
+    Serial.println(input.red_long_flag_raised());
+    Serial.print("Green short : ");
+    Serial.println(input.green_short_flag_raised());
+    Serial.print("Green long : ");
+    Serial.println(input.green_long_flag_raised());
+    Serial.println("----");
+    input.resetFlags();
+    delay(1000);
 }
