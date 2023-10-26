@@ -2,34 +2,31 @@
 #include <BME280I2C.h>
 #include <Wire.h>
 
-void setup(){
-    
-    Wire.begin();
+float get_temperature(){ // On donne le nom de notre fonction pour récupérer les valeurs de température en flottant
     BME280I2C bme;
-
-      while(!bme.begin())
-        {
-            Serial.println("Nous n'avons pas trouvé le capteur");
-            delay(1000);
+    unsigned long startTime=millis();
+    while (millis()-startTime < TIMEOUT){
+        Wire.begin();
+        bme.begin();
+        
+        float temperature=bme.temp();
+        if (temperature< -40 or temperature> 85){
+            return -1;
         }
 
-}  
+        else{
 
-
-float get_temperature(){ // On donne le nom de notre fonction pour récupérer les valeurs de température en flottant
-    
-    BME280I2C bme;
-    bme.begin();
+            BME280I2C::TempUnit tempUnit(BME280I2C::TempUnit_Celsius);  
+            return temperature;
+        }
         
-        float temperature;
-        temperature=bme.temp();
-        
-        BME280I2C::TempUnit tempUnit(BME280I2C::TempUnit_Celsius);  
-         
-        delay(1000);
-        Serial.print("La température est de :");
-        Serial.print(temperature);
-        Serial.print(" °C");
+    }
     
-    return(temperature);
+    return -2;
 }
+        // delay(1000);
+        // Serial.print("La température est de :");
+        // Serial.print(temperature);
+        // Serial.print(" °C");
+    
+    //return(temperature)
