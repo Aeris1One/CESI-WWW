@@ -1,13 +1,23 @@
-#include <Arduino.h>                                            // Initialisation des différentes bibliothèques 
+#include <Arduino.h>
 #include <Wire.h>
-#include <math.h>
-#include <BME280.h> 
+#include <BME280I2C.h>
 
-bme.begin();                                                    // Lancement du capteur 
 
-float get_pressure(){                                          
-    
-    float pression = bme.pres() ;                               // Lecture de la valeur du capteur
-    delay(1000);
-    return pression;                                            // Retour de la valeur de la pression 
+float get_pressure() {
+    unsigned long startTime = millis();
+    while (millis() - startTime < 5000) {
+        BME280I2C bme;
+
+        Wire.begin();
+
+        bme.begin();
+
+        float pressure = bme.pres();
+        if (pressure < 850 or pressure > 1080) {
+            return -1; // données incohérentes
+        } else {
+            return pressure;
+        }
+    }
+    return -2; // timeout
 }
