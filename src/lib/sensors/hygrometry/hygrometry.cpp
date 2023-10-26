@@ -5,7 +5,7 @@
 
 float get_hygrometry() {
     unsigned long startTime = millis();
-    while (millis() - startTime < TIMEOUT) {
+    while (millis() - startTime < 5000) {
         BME280I2C bme;
 
         Wire.begin();
@@ -13,7 +13,7 @@ float get_hygrometry() {
         bme.begin();
 
         float hygrometry = bme.hum();
-        if (hygrometry < HYGR_MINT || hygrometry > HYGR_MAXT) {
+        if (hygrometry < 10 || hygrometry > 100) {
             return -1; // données incohérentes
         } else {
             return hygrometry;
