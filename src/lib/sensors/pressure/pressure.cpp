@@ -7,7 +7,6 @@ bme.begin();                                                    // Lancement du 
 
 float get_pressure(){                                          
     
-    const int broche_capteur = A0;                              // Définition des broches de connexion du capteur
     float pression = bme.pres() ;                               // Lecture de la valeur du capteur
     delay(1000);
     return pression;                                            // Retour de la valeur de la pression 
