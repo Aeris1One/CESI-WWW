@@ -45,18 +45,9 @@ void setup() {
     Serial.begin(9600);
 }
 
-
+#include <lib/carte SD/carte SD.h>
 void loop() {
     Serial.println("Hello, world!");
-    Serial.print("Red short : ");
-    Serial.println(input.red_short_flag_raised());
-    Serial.print("Red long : ");
-    Serial.println(input.red_long_flag_raised());
-    Serial.print("Green short : ");
-    Serial.println(input.green_short_flag_raised());
-    Serial.print("Green long : ");
-    Serial.println(input.green_long_flag_raised());
-    Serial.println("----");
-    input.resetFlags();
+    Save_SD(10, 20, 30, 40, 50);
     delay(1000);
 }

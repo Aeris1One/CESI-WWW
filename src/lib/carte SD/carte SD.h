@@ -1,0 +1,1 @@
+void Save_SD(int lum, int temp, int hygr, int pres, int time);

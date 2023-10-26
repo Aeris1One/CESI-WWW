@@ -5,7 +5,7 @@
 float get_temperature(){ // On donne le nom de notre fonction pour récupérer les valeurs de température en flottant
     BME280I2C bme;
     unsigned long startTime=millis();
-    while (millis()-startTime < TIMEOUT){
+    while (millis() - startTime < 5000) {
         Wire.begin();
         bme.begin();
         

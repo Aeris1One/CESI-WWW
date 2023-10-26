@@ -6,7 +6,7 @@
 float get_pressure() {
     unsigned long startTime = millis();
     while (millis() - startTime < 5000) {               // On test depuis combien de temps la fonction est lancé
-        BME280I2C bme;                              
+        BME280I2C bme;
 
         Wire.begin();
 
@@ -20,3 +20,4 @@ float get_pressure() {
         }
     }
     return -2;                                          // Timeout
+}
