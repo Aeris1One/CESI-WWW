@@ -5,11 +5,11 @@
 
 #define MAX_FILE_SIZE 2048
 
-String create_filename(int year, int month, int day, int file_number) {
+String create_filename(short int year, short int month, short int day, short int file_number) {
     return String(year, DEC) + String(month, DEC) + String(day, DEC) + "_" + String(file_number) + ".log";
 }
 
-void Save_SD(DateTime time, int lum, int temp, int hygr, int pres, String gps_data) {
+void Save_SD(DateTime time, float lum, float temp, float hygr, float pres, String gps_data) {
     SdFat32 sd;
     File32 file;
 
