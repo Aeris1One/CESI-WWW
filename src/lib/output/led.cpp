@@ -44,12 +44,30 @@ void Output::set_mode(uint8_t new_mode) {
                 Serial.println("Mode inconnu");
                 led.setColorRGB(0, 255, 0, 0);
             }
-            // 5: Erreur RTC
+        case 5:{
+            // 5: Erreur 
+
+            }
+        case 6:{
             // 6: Erreur GPS
+            
+            }
+        case 7:{
             // 7: Erreur Capteur
+
+            }
+        case 8:{
             // 8: Erreur SD pleine
+
+            }
+        case 9:{
             // 9: Erreur Capteur (valeur incohérente)
+
+            }
+        case 10:{
             // 10: Erreur accès SD
+            
+            }
             led.setColorRGB(0, 255, 0, 0);
             last_update = millis();
             break;
