@@ -8,17 +8,15 @@
 
 #include <TimerInterrupt.h>
 
-
-#define DEBUG 0
+#include <lib/mode/std/std.h>
+#include <lib/mode/cfg/cfg.h>
+#include <lib/mode/eco/eco.h>
+#include <lib/mode/mtn/mtn.h>
 
 #define RED_PIN 4
 #define GREEN_PIN 3
 #define LED_CIN 5
 #define LED_DIN 6
-
-#if DEBUG
-#include <avr8-stub.h>
-#endif
 
 Input input(RED_PIN, GREEN_PIN);
 Output output(LED_CIN, LED_DIN);
@@ -32,11 +30,6 @@ void timer1_callback() {
 }
 
 void setup() {
-#if DEBUG
-    debug_init();
-    delay(1000);
-#endif
-
     output.set_mode(5);
     output.update();   
 
@@ -44,12 +37,18 @@ void setup() {
     ITimer1.attachInterruptInterval(100, timer1_callback); 
 
     Serial.begin(9600);
+
+    delay(5000);
+
+    if (input.red_short_flag_raised() or input.red_long_flag_raised()) {
+        cfg_setup();
+    } else {
+        std_setup();
+    }
 }
 
 #include <lib/carte SD/carte SD.h>
 #include <RTClib.h>
 void loop() {
-    Serial.println("Hello, world!");
-    Save_SD(DateTime(2021, 1, 1, 0, 0, 0), 0, 0, 0, 0, "0,0");
-    delay(500);
+
 }

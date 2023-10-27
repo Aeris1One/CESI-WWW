@@ -1,6 +1,5 @@
 #include <lib/config/config.h>
 #include <Arduino.h>
-#include <EEPROM.h>
 
 bool get_LUMIN() {
     return true;
@@ -10,11 +9,9 @@ int get_LUMIN_LOW() {
     return 255;
 };
 
-int get_LUMIN_HIGH();
-
-{
+int get_LUMIN_HIGH() {
 return 758;
-}
+};
 
 // TEMPERATURE
 bool get_TEMP_AIR() {
@@ -57,7 +54,7 @@ int get_PRESSURE_MAX() {
 };
 
 // GENERAL
-int get_LOG_INTERVAL() {
+uint16_t get_LOG_INTERVAL() {
     return 15;
 };
 

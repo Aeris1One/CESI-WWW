@@ -1,0 +1,1 @@
+void mtn_setup();

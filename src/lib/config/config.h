@@ -5,7 +5,6 @@
 #define WWW_CONFIG_H
 
 #include <Arduino.h>
-#include <EEPROM.h>
 
 // Tried to use a struct, but too complicated to store in eeprom
 // so did it this ugly way
@@ -63,7 +62,7 @@ int get_PRESSURE_MAX();
 void set_PRESSURE_MAX(int pressure_max);
 
 // GENERAL
-int get_LOG_INTERVAL();
+uint16_t get_LOG_INTERVAL();
 
 void set_LOG_INTERVAL(int log_interval);
 

@@ -4,6 +4,6 @@
 #include <lib/globals.h>
 
 
-void setup(){
+void mtn_setup() {
     mode = 4;
 }

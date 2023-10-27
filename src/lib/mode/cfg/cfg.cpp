@@ -4,6 +4,6 @@
 #include <lib/globals.h>
 
 
-void setup(){
+void cfg_setup() {
     mode = 2;
 }
