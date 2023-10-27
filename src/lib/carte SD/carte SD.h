@@ -1,3 +1,3 @@
 #include <RTClib.h>
 
-void Save_SD(DateTime time, int lum, int temp, int hygr, int pres, String gps_data);
+void Save_SD(DateTime time, float lum, float temp, float hygr, float pres, String gps_data);
