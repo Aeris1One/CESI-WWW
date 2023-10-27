@@ -43,6 +43,7 @@ void setup() {
     ITimer1.attachInterruptInterval(100, timer1_callback);
 
     Serial.begin(9600);
+    launch();
 }
 
 #include <lib/carte SD/carte SD.h>
