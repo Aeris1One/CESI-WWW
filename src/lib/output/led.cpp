@@ -25,13 +25,13 @@ void Output::set_mode(uint8_t new_mode) {
             break;
         }
         case 2: {
-            // 2: Mode Configuration
-            led.setColorRGB(0, 255, 255, 0);
+            // 2: Mode Eco
+            led.setColorRGB(0, 0, 0, 255);
             break;
         }
         case 3: {
-            // 3: Mode Eco
-            led.setColorRGB(0, 0, 0, 255);
+            // 3: Mode Configuration
+            led.setColorRGB(0, 255, 255, 0);    
             break;
         }
         case 4: {
