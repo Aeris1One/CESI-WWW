@@ -20,9 +20,8 @@ void Save_SD(int lum, int temp, int hygr, int pres, int time){          // Valeu
     if (taille > MAX_FILE_SIZE){                                        // Vérification si le fichier est plein
         int x = 1 ;                                                     // Initialisation de x qui va être la version de notre fichier 
         while (true){
-            String nomFichier = String(time) + String(x) +
-                                ".log";        // On crée un nouveau fichier avec le nom de la date et l'heure
-            File fichierExistant = SD.open(nomFichier);  // Création d'un nouveau fichier car le précédent est plein
+            String nomFichier = String(time) + String(x) +".log";       // On crée un nouveau fichier avec le nom de la date et l'heure
+            File fichierExistant = SD.open(nomFichier);                 // Création d'un nouveau fichier car le précédent est plein
             if (!fichierExistant){
                 String nomNvFichier = String(time) + String(x) + ".log";
                 fichier.rename(nomNvFichier);
@@ -32,7 +31,7 @@ void Save_SD(int lum, int temp, int hygr, int pres, int time){          // Valeu
         }
         String nomFichier2 = String(time) + "_0.log";
         fichier = SD.open(nomFichier2,
-                          FILE_WRITE);                 // On utilise le fichier existant car il n'est pas plein
+                          FILE_WRITE);                                  // On utilise le fichier existant car il n'est pas plein
          if (!fichier) {
             Serial.println("Erreur de création de fichier");            // Erreur d'accès au fichier 
             return;
