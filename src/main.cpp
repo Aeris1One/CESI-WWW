@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <lib/input/input.h>
 #include "lib/output/led.h"
+#include <launch.h>
 
 // Setup Timer Interrupts
 #define USE_TIMER_1 true
@@ -37,13 +38,13 @@ void setup() {
 #endif
 
     output.set_mode(5);
-    output.update();
+    output.update();   
 
     ITimer1.init();
-    ITimer1.attachInterruptInterval(100, timer1_callback);
+    ITimer1.attachInterruptInterval(100, timer1_callback); 
 
     Serial.begin(9600);
-    launch();
+    launch();  
 }
 
 #include <lib/carte SD/carte SD.h>
