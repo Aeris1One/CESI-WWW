@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <lib/input/input.h>
 #include "lib/output/led.h"
-#include <launch.h>
 
 // Setup Timer Interrupts
 #define USE_TIMER_1 true
@@ -44,14 +43,12 @@ void setup() {
     ITimer1.attachInterruptInterval(100, timer1_callback); 
 
     Serial.begin(9600);
-    launch();  
 }
 
 #include <lib/carte SD/carte SD.h>
+#include <RTClib.h>
 void loop() {
     Serial.println("Hello, world!");
-    Save_SD(10, 20, 30, 40, 50);
-    delay(1000);
     Save_SD(DateTime(2021, 1, 1, 0, 0, 0), 0, 0, 0, 0, "0,0");
     delay(500);
 }
