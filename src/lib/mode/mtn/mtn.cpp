@@ -7,6 +7,7 @@
 #include <lib/sensors/pressure/pressure.h>
 #include <lib/sensors/RTC/horloge.h>
 #include <lib/sensors/GPS/gps.h>
+#include <RTClib.h>
 
 void mtn_setup(){
     mode=4;
@@ -16,7 +17,7 @@ void mtn_setup(){
 void mtn_loop(){
 
     if(timer >= get_LOG_INTERVAL()*10){
-        Serial.print(get_horloge());
+        Serial.print(get_horloge().timestamp());
         Serial.print(get_luminosity());
         Serial.print(get_temperature());
         Serial.print(get_hygrometry());
