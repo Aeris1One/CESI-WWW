@@ -9,7 +9,7 @@ String get_gps(){
 
     while(gpsSerial.available()>0){
         char gps_data=gpsSerial.read();
-        Serial.print(gps_data);
+        //Serial.print(gps_data);
 
     }
 
