@@ -1,18 +1,36 @@
+#include <TinyGPS.h>
 #include <SoftwareSerial.h>
-#include <Arduino.h>
+
+TinyGPS gps;
+SoftwareSerial gpsSerial(3, 4);
 
 String get_gps(){
 
-    return("0000,0000");
-    SoftwareSerial gpsSerial(4,5);
-    gpsSerial.begin(9600);
+    gpsSerial.begin(4800);
+    bool data_renew = false;
+    unsigned short sentences, failed;
+    unsigned long characters;
 
-    while(gpsSerial.available()>0){
-        char gps_data=gpsSerial.read();
-        Serial.print(gps_data);
-
+  for (unsigned long start = millis(); millis() - start < 1000;) {
+    while (gpsSerial.available())
+    {
+        characters = gpsSerial.read();
+        if (gps.encode(characters));
+        data_renew = !data_renew;
     }
+  }
 
+  if (data_renew) {
+    float lat, lon;
+    unsigned long age;
+    gps.f_get_position(&lat, &lon, &age);
+    Serial.print("LAT=");
+    Serial.print(lat == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : lat, 6);
+    Serial.print(" LON=");
+    Serial.print(lon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : lon, 6);
+  }
+  
+  if (characters == 0);
+    Serial.println("Aucune donnée");
 
 }
-
