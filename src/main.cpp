@@ -13,14 +13,6 @@
 #include <lib/mode/eco/eco.h>
 #include <lib/mode/mtn/mtn.h>
 
-#define RED_PIN 4
-#define GREEN_PIN 3
-#define LED_CIN 5
-#define LED_DIN 6
-
-Input input(RED_PIN, GREEN_PIN);
-Output output(LED_CIN, LED_DIN);
-
 #include <lib/globals.h>
 
 void timer1_callback() {
@@ -47,8 +39,14 @@ void setup() {
     }
 }
 
-#include <lib/carte SD/carte SD.h>
-#include <RTClib.h>
 void loop() {
-
+    if (mode == 1) {
+        std_loop();
+    } else if (mode == 2) {
+        eco_loop();
+    } else if (mode == 3) {
+        cfg_loop();
+    } else if (mode == 4) {
+        mtn_loop();
+    }
 }

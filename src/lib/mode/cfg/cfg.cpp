@@ -7,3 +7,5 @@
 void cfg_setup() {
     mode = 2;
 }
+
+void cfg_loop() {}
