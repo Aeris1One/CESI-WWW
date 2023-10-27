@@ -9,4 +9,6 @@
 
 uint8_t mode = 0;
 
+uint32_t timer = 0;
+
 #endif //WWW_GLOBALS_H

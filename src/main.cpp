@@ -28,6 +28,7 @@ Output output(LED_CIN, LED_DIN);
 void timer1_callback() {
     output.update();
     input.update();
+    timer += 1;
 }
 
 void setup() {
