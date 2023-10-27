@@ -1,1 +1,1 @@
-char get_gps();
+String get_gps();

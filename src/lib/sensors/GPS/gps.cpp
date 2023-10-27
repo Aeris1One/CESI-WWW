@@ -3,6 +3,7 @@
 
 String get_gps(){
 
+    return("0000,0000");
     SoftwareSerial gpsSerial(4,5);
     gpsSerial.begin(9600);
 
@@ -11,6 +12,7 @@ String get_gps(){
         Serial.print(gps_data);
 
     }
+
 
 }
 
