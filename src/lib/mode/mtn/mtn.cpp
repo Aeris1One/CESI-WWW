@@ -16,7 +16,12 @@ void mtn_setup(){
 void mtn_loop(){
 
     if(timer >= get_LOG_INTERVAL()*10){
-        Serial.println(get_horloge(), get_luminosity(), get_temperature(), get_hygrometry(), get_pressure(), get_gps());
+        Serial.print(get_horloge());
+        Serial.print(get_luminosity());
+        Serial.print(get_temperature());
+        Serial.print(get_hygrometry());
+        Serial.print(get_pressure());
+        Serial.println(get_gps());
         timer = 0;
     }
 }
