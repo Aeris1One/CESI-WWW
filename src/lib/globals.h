@@ -7,6 +7,6 @@
 
 #include <Arduino.h>
 
-volatile uint8_t mode = 0;
+uint8_t mode = 0;
 
 #endif //WWW_GLOBALS_H
