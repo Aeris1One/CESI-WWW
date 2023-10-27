@@ -7,7 +7,7 @@
 
 #include <Arduino.h>
 
-uint8_t mode = 0;
-uint32_t timer = 0;
+extern uint8_t mode;
+extern uint32_t timer;
 
 #endif //WWW_GLOBALS_H
