@@ -14,11 +14,11 @@ bool get_LUMIN();
 
 void set_LUMIN(bool lumin);
 
-int get_LUMIN_LOW();
+short int get_LUMIN_LOW();
 
 void set_LUMIN_LOW(int lumin_low);
 
-int get_LUMIN_HIGH();
+short int get_LUMIN_HIGH();
 
 void set_LUMIN_HIGH(int lumin_high);
 
@@ -27,11 +27,11 @@ bool get_TEMP_AIR();
 
 void set_TEMP_AIR(bool temp_air);
 
-int get_MIN_TEMP_AIR();
+short int get_MIN_TEMP_AIR();
 
 void set_MIN_TEMP_AIR(int min_temp_air);
 
-int get_MAX_TEMP_AIR();
+short int get_MAX_TEMP_AIR();
 
 void set_MAX_TEMP_AIR(int max_temp_air);
 
@@ -40,11 +40,11 @@ bool get_HYGR();
 
 void set_HYGR(bool hygr);
 
-int get_HYGR_MINT();
+short int get_HYGR_MINT();
 
 void set_HYGR_MINT(int hygr_mint);
 
-int get_HYGR_MAXT();
+short int get_HYGR_MAXT();
 
 void set_HYGR_MAXT(int hygr_maxt);
 
@@ -53,11 +53,11 @@ bool get_PRESSURE();
 
 void set_PRESSURE(bool pressure);
 
-int get_PRESSURE_MIN();
+short int get_PRESSURE_MIN();
 
 void set_PRESSURE_MIN(int pressure_min);
 
-int get_PRESSURE_MAX();
+short int get_PRESSURE_MAX();
 
 void set_PRESSURE_MAX(int pressure_max);
 
@@ -66,11 +66,11 @@ uint16_t get_LOG_INTERVAL();
 
 void set_LOG_INTERVAL(int log_interval);
 
-int get_FILE_MAX_SIZE();
+short int get_FILE_MAX_SIZE();
 
 void set_FILE_MAX_SIZE(int file_max_size);
 
-int get_TIMEOUT();
+short int get_TIMEOUT();
 
 void set_TIMEOUT(int timeout);
 
