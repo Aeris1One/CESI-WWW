@@ -41,7 +41,6 @@ void Output::set_mode(uint8_t new_mode) {
         }
         default: {
             if ((mode < 1) & (mode > 10)) {
-                Serial.println("Mode inconnu");
                 led.setColorRGB(0, 255, 0, 0);
             }
         case 5:{

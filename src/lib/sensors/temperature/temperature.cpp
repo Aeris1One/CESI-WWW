@@ -1,22 +1,21 @@
-#include <Arduino.h>    //Bibliothèque permettant d'utiliser les instructions en Arduino
+#include <Arduino.h>
 #include <BME280I2C.h>
 #include <Wire.h>
+#include <lib/config/config.h>
 
 float get_temperature(){ // On donne le nom de notre fonction pour récupérer les valeurs de température en flottant
-    BME280I2C bme;
+    static BME280I2C bme;
     unsigned long startTime=millis();
     while (millis() - startTime < 5000) {
         Wire.begin();
         bme.begin();
         
         float temperature=bme.temp();
-        if (temperature< -40 or temperature> 85){
+        if (temperature < get_MIN_TEMP_AIR() or temperature > get_MAX_TEMP_AIR()) {
             return -1;
         }
 
         else{
-
-            BME280I2C::TempUnit tempUnit(BME280I2C::TempUnit_Celsius);  
             return temperature;
         }
         
