@@ -1,53 +1,59 @@
-#include <SPI.h>        
-#include <SD.h>
+#include <SPI.h>
+#include <SdFat.h>
+#include <RTClib.h>
 
 #define MAX_FILE_SIZE 2048
 
-void Save_SD(int lum, int temp, int hygr, int pres, int time){          // Valeurs des capteurs necessaire
-    if (!SD.begin()){                                                   // Vériication du lancement de la carte SD sans problème
-        Serial.println("Erreur lors du lancement de la carte SD");
+void Save_SD(DateTime time, int lum, int temp, int hygr, int pres, String gps_data) {
+    SdFat32 sd;
+    File32 file;
+
+    // Filename = YYMMDD_0.log
+    String filename_base = String(time.year(), DEC) + String(time.month(), DEC) + String(time.day(), DEC);
+    String filename_zero = filename_base + String("_0.log");
+    Serial.print("1 : ");
+    Serial.println(filename_base);
+
+    if (!sd.begin(4, SPI_HALF_SPEED)) {
+        Serial.println("Error initializing SD card");
         return;
     }
-    File fichier = SD.open(time + "_0.log");                            // Vérification de la création du fichier
-    if (!fichier){
-        fichier = SD.open(time + "_0.log",FILE_WRITE);
-        if (!fichier){
-            Serial.println("Erreur de création du fichier");            // Erreur d'accès au fichier 
-            return;
+
+    file = sd.open(filename_base + String("_0.log"), FILE_WRITE);
+
+    if (file.size() > 2048) {
+        Serial.println("File too big, renaming");
+        int x = 1;
+        String filename_loop = filename_base + String("_") + String(x) + String(".log");
+        while (sd.exists(filename_loop)) {
+            x++;
+            filename_loop = filename_base + String("_") + String(x) + String(".log");
+            Serial.println(filename_loop);
         }
-    }
-    int taille = fichier.size();                                        // On récupère la taille du fichier avec size()
-    if (taille > MAX_FILE_SIZE){                                        // Vérification si le fichier est plein
-        int x = 1 ;                                                     // Initialisation de x qui va être la version de notre fichier 
-        while (true){
-            String nomFichier = String(time) + String(x) +".log";       // On crée un nouveau fichier avec le nom de la date et l'heure
-            File fichierExistant = SD.open(nomFichier);                 // Création d'un nouveau fichier car le précédent est plein
-            if (!fichierExistant){
-                String nomNvFichier = String(time) + String(x) + ".log";
-                fichier.rename(nomNvFichier);
-                break;
-            }
-            x++;                                                        // Incrémentation de x de 1 
-        }
-        String nomFichier2 = String(time) + "_0.log";
-        fichier = SD.open(nomFichier2,
-                          FILE_WRITE);                                  // On utilise le fichier existant car il n'est pas plein
-         if (!fichier) {
-            Serial.println("Erreur de création de fichier");            // Erreur d'accès au fichier 
-            return;
-            }
+        Serial.print("New filename: ");
+        Serial.println(filename_loop);
+        char filename_buf[filename_loop.length() + 1];
+        filename_loop.toCharArray(filename_buf, filename_loop.length() + 1);
+        file.rename(filename_buf);
+        file.close();
+        file = sd.open(filename_base + String("_0.log"), FILE_WRITE);
     }
 
-    fichier.print(lum);                                                 // On écrit les valeurs des capteurs dans le fichier 
-    fichier.print(";");
-    fichier.print(temp);
-    fichier.print(";");
-    fichier.print(hygr);
-    fichier.print(";");
-    fichier.print(pres);
-    fichier.print(";");
-    fichier.print(time);
-    fichier.println();
+    if (!file) {
+        Serial.println("Error opening file");
+        return;
+    }
+    Serial.println("Writing to file");
 
-    fichier.close();                                                   // On ferme le fichier quand toutes les données sont enregistré
+    String line = String(time.timestamp()) + String(";")
+                  + String(lum) + String(";")
+                  + String(temp) + String(";")
+                  + String(hygr) + String(";")
+                  + String(pres) + String(";")
+                  + gps_data;
+    file.println(line);
+    Serial.print("Wrote: ");
+    Serial.println(line);
+    file.close();
+    Serial.println("Done");
 }

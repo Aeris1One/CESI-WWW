@@ -52,4 +52,6 @@ void loop() {
     Serial.println("Hello, world!");
     Save_SD(10, 20, 30, 40, 50);
     delay(1000);
+    Save_SD(DateTime(2021, 1, 1, 0, 0, 0), 0, 0, 0, 0, "0,0");
+    delay(500);
 }
