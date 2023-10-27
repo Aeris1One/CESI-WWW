@@ -31,16 +31,15 @@ void Save_SD(DateTime time, float lum, float temp, float hygr, float pres, Strin
     }
     //Serial.println("Writing to file");
 
-    String line = String(time.timestamp()) + String(";")
-                  + String(lum) + String(";")
-                  + String(temp) + String(";")
-                  + String(hygr) + String(";")
-                  + String(pres) + String(";")
-                  + gps_data;
-    file.println(line);
-    //Serial.print("Wrote: ");
-    //Serial.println(line);
+    char buffer[256]; // Taille du buffer suffisante pour stocker les données GPS
+    int buffer_index = 0;
+
+// Concaténation des données dans le buffer
+    sprintf(buffer, "%ld;%d;%d;%d;%d;%s",
+            time.timestamp(), lum, temp, hygr, pres, gps_data);
+
+// Écriture des données dans le fichier
+    file.write(buffer, strlen(buffer));
     file.flush();
     file.close();
-    //Serial.println("Done");
 }
