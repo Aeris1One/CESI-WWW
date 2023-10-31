@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <ChainableLED.h>
 
-Output::Output(uint8_t pinCIN, uint8_t pinDIN) {
+Output::Output(uint8_t pinCIN, uint8_t pinDIN) : led(pinCIN,pinDIN,1) {
     pinMode(pinCIN, OUTPUT);
     pinMode(pinDIN, OUTPUT);
     this->led = ChainableLED(pinCIN, pinDIN, 1);
