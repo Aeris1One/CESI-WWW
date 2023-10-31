@@ -1,5 +1,5 @@
 #include <SPI.h>
-#include <SdFat.h>
+#include <SD.h>
 #include <RTClib.h>
 #include <lib/globals.h>
 
@@ -10,36 +10,34 @@ String create_filename(short int year, short int month, short int day, short int
 }
 
 void Save_SD(DateTime time, float lum, float temp, float hygr, float pres, String gps_data) {
-    SdFat32 sd;
-    File32 file;
+    File file;
 
-    if (!sd.begin(4, SPI_HALF_SPEED)) {
-        //Serial.println("Error initializing SD card");
+    if (!SD.begin(4, SPI_HALF_SPEED)) {
+        // Serial.println("Error initializing SD card");
         return;
     }
 
     int file_number = 0;
-    while (sd.exists(create_filename(time.year(), time.month(), time.day(), file_number))) {
+    while (SD.exists(create_filename(time.year(), time.month(), time.day(), file_number))) {
         file_number++;
     }
 
-    file = sd.open(create_filename(time.year(), time.month(), time.day(), file_number), FILE_WRITE);
-    if (!file || !file.isOpen()) {
-        //Serial.println("Error opening file");
+    file = SD.open(create_filename(time.year(), time.month(), time.day(), file_number), FILE_WRITE);
+    if (!file) {
+        // Serial.println("Error opening file");
         SD_ERROR = true;
         return;
     }
-    //Serial.println("Writing to file");
+    // Serial.println("Writing to file");
 
     char buffer[256]; // Taille du buffer suffisante pour stocker les données GPS
     int buffer_index = 0;
 
-// Concaténation des données dans le buffer
-    sprintf(buffer, "%ld;%d;%d;%d;%d;%s",
-            time.timestamp(), lum, temp, hygr, pres, gps_data);
+    // Concaténation des données dans le buffer
+    sprintf(buffer, "%ld;%f;%f;%f;%f;%s",
+            time.timestamp(), lum, temp, hygr, pres, gps_data.c_str());
 
-// Écriture des données dans le fichier
-    file.write(buffer, strlen(buffer));
-    file.flush();
+    // Écriture des données dans le fichier
+    file.println(buffer);
     file.close();
 }
