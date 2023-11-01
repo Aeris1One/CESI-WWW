@@ -6,7 +6,6 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
-
 #define EEPROM_LOG_INTERVAL_ADDR 0
 #define EEPROM_FILE_MAX_SIZE_ADDR 2
 #define EEPROM_RESET_FLAG_ADDR 4
@@ -25,6 +24,8 @@
 #define EEPROM_PRESSURE_MAX_ADDR 28
 
 
+
+
 int logInterval;
 int fileMaxSize;
 int resetFlag;
@@ -41,6 +42,25 @@ int hygrMaxTemp;
 int pressure;
 int pressureMin;
 int pressureMax;
+
+void defaultEEPROMData(){
+  EEPROM.write(EEPROM_LOG_INTERVAL_ADDR, 10);
+  EEPROM.write(EEPROM_FILE_MAX_SIZE_ADDR, 4096);
+  EEPROM.write(EEPROM_TIMEOUT_ADDR, 30);
+  EEPROM.write(EEPROM_LUMIN_ADDR, 1);
+  EEPROM.write(EEPROM_LUMIN_LOW_ADDR, 255);
+  EEPROM.write(EEPROM_LUMIN_HIGH_ADDR, 768);
+  EEPROM.write(EEPROM_TEMP_AIR_ADDR, 1);
+  EEPROM.write(EEPROM_MIN_TEMP_AIR_ADDR, -10);
+  EEPROM.write(EEPROM_MAX_TEMP_AIR_ADDR, 60);
+  EEPROM.write(EEPROM_HYGR_ADDR, 1);
+  EEPROM.write(EEPROM_HYGR_MINT_ADDR, 0);
+  EEPROM.write(EEPROM_HYGR_MAXT_ADDR, 50);
+  EEPROM.write(EEPROM_PRESSURE_ADDR, 1);
+  EEPROM.write(EEPROM_PRESSURE_MIN_ADDR, 850);
+  EEPROM.write(EEPROM_PRESSURE_MAX_ADDR, 1080);
+
+}
 
 void readEEPROMData() {
 
@@ -150,14 +170,16 @@ void processCommand(String command) {
 
       pressureMax = cmdValue.toInt();
       EEPROM.write(EEPROM_PRESSURE_MAX_ADDR, pressureMax);
-
+      
     }
   }
 }
 
 
 void setup() {
+  EEPROM.write(EEPROM_LOG_INTERVAL_ADDR, 10);
   Serial.begin(9600); 
+  defaultEEPROMData();
   readEEPROMData(); 
 }
 
@@ -166,7 +188,5 @@ void loop() {
     String command = Serial.readStringUntil('\n');
     processCommand(command);
   }
-
-
 }
 
