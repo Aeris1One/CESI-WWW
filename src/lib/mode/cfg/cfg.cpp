@@ -171,6 +171,8 @@ void processCommand(String command) {
       pressureMax = cmdValue.toInt();
       EEPROM.write(EEPROM_PRESSURE_MAX_ADDR, pressureMax);
       
+    } else if(cmdName == "RESET"){
+        defaultEEPROMData();
     }
   }
 }
