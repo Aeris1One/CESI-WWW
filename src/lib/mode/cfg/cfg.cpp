@@ -22,6 +22,9 @@
 #define EEPROM_PRESSURE_ADDR 25
 #define EEPROM_PRESSURE_MIN_ADDR 26
 #define EEPROM_PRESSURE_MAX_ADDR 28
+#define EEPROM_CLOCK_ADDR 29
+#define EEPROM_DATE_ADDR 30
+#define EEPROM_DAY_ADDR 31
 
 
 
@@ -173,6 +176,18 @@ void processCommand(String command) {
       
     } else if(cmdName == "RESET"){
         defaultEEPROMData();
+    }else if (cmdName == "CLOCK") {
+    
+     //write HOURS-MIN-SECONDS
+
+    } else if (cmdName == "DATE") {
+     
+     //write MM/JJ/YYYY
+
+    } else if (cmdName == "DAY") {
+     
+    //write DAY
+
     }
   }
 }
