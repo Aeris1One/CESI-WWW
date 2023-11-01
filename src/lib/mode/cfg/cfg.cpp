@@ -1,93 +1,58 @@
 #include <Arduino.h>
-#include <ChainableLED.h>
-#include <lib/output/led.h>
-#include <lib/globals.h>
-#include <EEPROM.h>
-#include <Wire.h>
 #include <EEPROM.h>
 
-#define EEPROM_LOG_INTERVAL_ADDR 0
-#define EEPROM_FILE_MAX_SIZE_ADDR 2
-#define EEPROM_RESET_FLAG_ADDR 4
-#define EEPROM_TIMEOUT_ADDR 5
-#define EEPROM_LUMIN_ADDR 10
-#define EEPROM_LUMIN_LOW_ADDR 11
-#define EEPROM_LUMIN_HIGH_ADDR 13
-#define EEPROM_TEMP_AIR_ADDR 15
-#define EEPROM_MIN_TEMP_AIR_ADDR 16
-#define EEPROM_MAX_TEMP_AIR_ADDR 18
-#define EEPROM_HYGR_ADDR 20
-#define EEPROM_HYGR_MINT_ADDR 21
-#define EEPROM_HYGR_MAXT_ADDR 23
-#define EEPROM_PRESSURE_ADDR 25
-#define EEPROM_PRESSURE_MIN_ADDR 26
-#define EEPROM_PRESSURE_MAX_ADDR 28
-#define EEPROM_CLOCK_ADDR 29
-#define EEPROM_DATE_ADDR 30
-#define EEPROM_DAY_ADDR 31
+struct Configuration {
+  int logInterval;
+  int fileMaxSize;
+  int resetFlag;
+  int timeout;
+  int luminosity;
+  int luminLowThreshold;
+  int luminHighThreshold;
+  int tempAir;
+  int minTempAir;
+  int maxTempAir;
+  int hygrometry;
+  int hygrMinTemp;
+  int hygrMaxTemp;
+  int pressure;
+  int pressureMin;
+  int pressureMax;
+  //add clock
+  //add date
+  String day;
+};
 
+#define EEPROM_CONFIG_ADDR 0
 
+Configuration config;
 
+void defaultEEPROMData() {
+  config.logInterval = 10;
+  config.fileMaxSize = 4096;
+  config.resetFlag = 0;
+  config.timeout = 30;
+  config.luminosity = 1;
+  config.luminLowThreshold = 255;
+  config.luminHighThreshold = 768;
+  config.tempAir = 1;
+  config.minTempAir = -10;
+  config.maxTempAir = 60;
+  config.hygrometry = 1;
+  config.hygrMinTemp = 0;
+  config.hygrMaxTemp = 50;
+  config.pressure = 1;
+  config.pressureMin = 850;
+  config.pressureMax = 1080;
 
-int logInterval;
-int fileMaxSize;
-int resetFlag;
-int timeout;
-int luminosity;
-int luminLowThreshold;
-int luminHighThreshold;
-int tempAir;
-int minTempAir;
-int maxTempAir;
-int hygrometry;
-int hygrMinTemp;
-int hygrMaxTemp;
-int pressure;
-int pressureMin;
-int pressureMax;
-
-void defaultEEPROMData(){
-  EEPROM.write(EEPROM_LOG_INTERVAL_ADDR, 10);
-  EEPROM.write(EEPROM_FILE_MAX_SIZE_ADDR, 4096);
-  EEPROM.write(EEPROM_TIMEOUT_ADDR, 30);
-  EEPROM.write(EEPROM_LUMIN_ADDR, 1);
-  EEPROM.write(EEPROM_LUMIN_LOW_ADDR, 255);
-  EEPROM.write(EEPROM_LUMIN_HIGH_ADDR, 768);
-  EEPROM.write(EEPROM_TEMP_AIR_ADDR, 1);
-  EEPROM.write(EEPROM_MIN_TEMP_AIR_ADDR, -10);
-  EEPROM.write(EEPROM_MAX_TEMP_AIR_ADDR, 60);
-  EEPROM.write(EEPROM_HYGR_ADDR, 1);
-  EEPROM.write(EEPROM_HYGR_MINT_ADDR, 0);
-  EEPROM.write(EEPROM_HYGR_MAXT_ADDR, 50);
-  EEPROM.write(EEPROM_PRESSURE_ADDR, 1);
-  EEPROM.write(EEPROM_PRESSURE_MIN_ADDR, 850);
-  EEPROM.write(EEPROM_PRESSURE_MAX_ADDR, 1080);
-
+  EEPROM.put(EEPROM_CONFIG_ADDR, config);
 }
 
 void readEEPROMData() {
-
-  logInterval = EEPROM.read(EEPROM_LOG_INTERVAL_ADDR);
-  fileMaxSize = EEPROM.read(EEPROM_FILE_MAX_SIZE_ADDR);
-  resetFlag = EEPROM.read(EEPROM_RESET_FLAG_ADDR);
-  timeout = EEPROM.read(EEPROM_TIMEOUT_ADDR);
-  luminosity = EEPROM.read(EEPROM_LUMIN_ADDR);
-  luminLowThreshold = EEPROM.read(EEPROM_LUMIN_LOW_ADDR);
-  luminHighThreshold = EEPROM.read(EEPROM_LUMIN_HIGH_ADDR);
-  tempAir = EEPROM.read(EEPROM_TEMP_AIR_ADDR);
-  minTempAir = EEPROM.read(EEPROM_MIN_TEMP_AIR_ADDR);
-  maxTempAir = EEPROM.read(EEPROM_MAX_TEMP_AIR_ADDR);
-  hygrometry = EEPROM.read(EEPROM_HYGR_ADDR);
-  hygrMinTemp = EEPROM.read(EEPROM_HYGR_MINT_ADDR);
-  hygrMaxTemp = EEPROM.read(EEPROM_HYGR_MAXT_ADDR);
-  pressure = EEPROM.read(EEPROM_PRESSURE_ADDR);
-  pressureMin = EEPROM.read(EEPROM_PRESSURE_MIN_ADDR);
-  pressureMax = EEPROM.read(EEPROM_PRESSURE_MAX_ADDR);
-
+  EEPROM.get(EEPROM_CONFIG_ADDR, config);
 }
 
 void processCommand(String command) {
-
   int equalsIndex = command.indexOf('=');
 
   if (equalsIndex != -1) {
@@ -95,109 +60,53 @@ void processCommand(String command) {
     String cmdValue = command.substring(equalsIndex + 1);
 
     if (cmdName == "LOG_INTERVAL") {
-
-      logInterval = cmdValue.toInt();
-      EEPROM.write(EEPROM_LOG_INTERVAL_ADDR, logInterval);
-
+      config.logInterval = cmdValue.toInt();
     } else if (cmdName == "FILE_MAX_SIZE") {
-
-      fileMaxSize = cmdValue.toInt();
-      EEPROM.write(EEPROM_FILE_MAX_SIZE_ADDR, fileMaxSize);
-
-    } else if (cmdName == "RESET") {
-
-      resetFlag = cmdValue.toInt();
-      EEPROM.write(EEPROM_RESET_FLAG_ADDR, resetFlag);
-
+      config.fileMaxSize = cmdValue.toInt();
     } else if (cmdName == "TIMEOUT") {
-
-      timeout = cmdValue.toInt();
-      EEPROM.write(EEPROM_TIMEOUT_ADDR, timeout);
-
+      config.timeout = cmdValue.toInt();
     } else if (cmdName == "LUMIN") {
-
-      luminosity = cmdValue.toInt();
-      EEPROM.write(EEPROM_LUMIN_ADDR, luminosity);
-
+      config.luminosity = cmdValue.toInt();
     } else if (cmdName == "LUMIN_LOW") {
-
-      luminLowThreshold = cmdValue.toInt();
-      EEPROM.write(EEPROM_LUMIN_LOW_ADDR, luminLowThreshold);
-
+      config.luminLowThreshold = cmdValue.toInt();
     } else if (cmdName == "LUMIN_HIGH") {
-
-      luminHighThreshold = cmdValue.toInt();
-      EEPROM.write(EEPROM_LUMIN_HIGH_ADDR, luminHighThreshold);
-
+      config.luminHighThreshold = cmdValue.toInt();
     } else if (cmdName == "TEMP_AIR") {
-
-      tempAir = cmdValue.toInt();
-      EEPROM.write(EEPROM_TEMP_AIR_ADDR, tempAir);
-
+      config.tempAir = cmdValue.toInt();
     } else if (cmdName == "MIN_TEMP_AIR") {
-
-      minTempAir = cmdValue.toInt();
-      EEPROM.write(EEPROM_MIN_TEMP_AIR_ADDR, minTempAir);
-
+      config.minTempAir = cmdValue.toInt();
     } else if (cmdName == "MAX_TEMP_AIR") {
-
-      maxTempAir = cmdValue.toInt();
-      EEPROM.write(EEPROM_MAX_TEMP_AIR_ADDR, maxTempAir);
-
+      config.maxTempAir = cmdValue.toInt();
     } else if (cmdName == "HYGR") {
-
-      hygrometry = cmdValue.toInt();
-      EEPROM.write(EEPROM_HYGR_ADDR, hygrometry);
-
+      config.hygrometry = cmdValue.toInt();
     } else if (cmdName == "HYGR_MINT") {
-
-      hygrMinTemp = cmdValue.toInt();
-      EEPROM.write(EEPROM_HYGR_MINT_ADDR, hygrMinTemp);
-
+      config.hygrMinTemp = cmdValue.toInt();
     } else if (cmdName == "HYGR_MAXT") {
-
-      hygrMaxTemp = cmdValue.toInt();
-      EEPROM.write(EEPROM_HYGR_MAXT_ADDR, hygrMaxTemp);
-
+      config.hygrMaxTemp = cmdValue.toInt();
     } else if (cmdName == "PRESSURE") {
-
-      pressure = cmdValue.toInt();
-      EEPROM.write(EEPROM_PRESSURE_ADDR, pressure);
-
+      config.pressure = cmdValue.toInt();
     } else if (cmdName == "PRESSURE_MIN") {
-
-      pressureMin = cmdValue.toInt();
-      EEPROM.write(EEPROM_PRESSURE_MIN_ADDR, pressureMin);
-
+      config.pressureMin = cmdValue.toInt();
     } else if (cmdName == "PRESSURE_MAX") {
-
-      pressureMax = cmdValue.toInt();
-      EEPROM.write(EEPROM_PRESSURE_MAX_ADDR, pressureMax);
-      
-    } else if(cmdName == "RESET"){
-        defaultEEPROMData();
-    }else if (cmdName == "CLOCK") {
-    
-     //write HOURS-MIN-SECONDS
-
+      config.pressureMax = cmdValue.toInt();
+    } else if (cmdName == "RESET") {
+      defaultEEPROMData();
+    } else if (cmdName == "CLOCK") {
+      // Write HOURS-MIN-SECONDS
     } else if (cmdName == "DATE") {
-     
-     //write MM/JJ/YYYY
-
+      // Write MM/JJ/YYYY
     } else if (cmdName == "DAY") {
-     
-    //write DAY
-
+      config.day = cmdValue;
     }
+
+    EEPROM.put(EEPROM_CONFIG_ADDR, config);
   }
 }
 
-
 void setup() {
-  EEPROM.write(EEPROM_LOG_INTERVAL_ADDR, 10);
-  Serial.begin(9600); 
+  Serial.begin(9600);
   defaultEEPROMData();
-  readEEPROMData(); 
+  readEEPROMData();
 }
 
 void loop() {
@@ -206,4 +115,3 @@ void loop() {
     processCommand(command);
   }
 }
-
