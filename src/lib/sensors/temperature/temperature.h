@@ -1,2 +1,0 @@
-float get_temperature();
-
