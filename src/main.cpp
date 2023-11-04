@@ -68,22 +68,22 @@ void timer1_callback() {
                 next_update = 1000 / TimerInterval;
             } else {
                 if (error & 1) { // RTC
-                    led.setColorRGB(0, 255, 0, 0);
-                    next_update = 1000 / TimerInterval;
-                } else if (error & 2) { // GPS
-                    led.setColorRGB(0, 0, 255, 0);
-                    next_update = 1000 / TimerInterval;
-                } else if (error & 4) { // Sensor access error
                     led.setColorRGB(0, 0, 0, 255);
                     next_update = 1000 / TimerInterval;
-                } else if (error & 8) { // Sensor returned incoherent data
+                } else if (error & 2) { // GPS
                     led.setColorRGB(0, 255, 255, 0);
+                    next_update = 1000 / TimerInterval;
+                } else if (error & 4) { // Sensor access error
+                    led.setColorRGB(0, 0, 255, 0);
+                    next_update = 1000 / TimerInterval;
+                } else if (error & 8) { // Sensor returned incoherent data
+                    led.setColorRGB(0, 0, 255, 0);
                     next_update = 2000 / TimerInterval;
                 } else if (error & 16) { // SD full
-                    led.setColorRGB(0, 255, 0, 255);
+                    led.setColorRGB(0, 255, 255, 255);
                     next_update = 1000 / TimerInterval;
                 } else if (error & 32) { // SD access error
-                    led.setColorRGB(0, 0, 255, 255);
+                    led.setColorRGB(0, 255, 255, 255);
                     next_update = 2000 / TimerInterval;
                 }
             }
@@ -183,13 +183,13 @@ void loop() {
             }
             if (GREEN_LONG_FLAG) {
                 mode = 3;
-                capture_timer = config.getValue("LOG_INTERVAL") * 2000 / TimerInterval;
+                capture_timer = config.getValue(1) * 2000 / TimerInterval;
                 reset_flags();
                 return;
             }
 
             if (capture_timer == 0) {
-                capture_timer = config.getValue("LOG_INTERVAL") * 1000 / TimerInterval;
+                capture_timer = config.getValue(1) * 1000 / TimerInterval;
                 Serial.println("Capturing (normal)");
                 sensors.capture(true, true);
             }
@@ -198,7 +198,7 @@ void loop() {
         case 2: //configuration
             if (config_timer == 0) {
                 mode = 1;
-                capture_timer = config.getValue("LOG_INTERVAL") * 1000 / TimerInterval;
+                capture_timer = config.getValue(1) * 1000 / TimerInterval;
                 return;
             }
             // retrieve commands from serial
@@ -268,13 +268,13 @@ void loop() {
             }
             if (GREEN_LONG_FLAG) {
                 mode = 1;
-                capture_timer = config.getValue("LOG_INTERVAL") * 1000 / TimerInterval;
+                capture_timer = config.getValue(1) * 1000 / TimerInterval;
                 reset_flags();
                 return;
             }
 
             if (capture_timer == 0) {
-                capture_timer = config.getValue("LOG_INTERVAL") * 2000 / TimerInterval;
+                capture_timer = config.getValue(1) * 2000 / TimerInterval;
                 sensors.capture(true, eco_gps_state);
                 eco_gps_state = !eco_gps_state;
             }
@@ -283,10 +283,10 @@ void loop() {
             if (RED_LONG_FLAG) {
                 if (previous_mode == 1){
                     mode = 1;
-                    capture_timer = config.getValue("LOG_INTERVAL") * 1000 / TimerInterval;
+                    capture_timer = config.getValue(1) * 1000 / TimerInterval;
                 } else if (previous_mode == 3){
                     mode = 3;
-                    capture_timer = config.getValue("LOG_INTERVAL") * 2000 / TimerInterval;
+                    capture_timer = config.getValue(1) * 2000 / TimerInterval;
                 }
                 reset_flags();
                 return;

@@ -6,7 +6,7 @@
 #include <Arduino.h>
 //#include <SdFat.h>
 #include <globals.h>
-#include <BME280I2C.h>
+#include <forcedClimate.h>
 #include <Wire.h>
 #include <RTClib.h>
 
@@ -22,9 +22,9 @@ void sensors::capture(bool sd, bool gps) {
 
     // LUMINOSITY
     int luminosity = analogRead(0);
-    if (luminosity < config.getValue("LUMIN_LOW")) {
+    if (luminosity < config.getValue(7 /*LUMIN_LOW*/ )) {
         luminosity = 0;
-    } else if (luminosity < config.getValue("LUMIN_HIGH")) {
+    } else if (luminosity < config.getValue(9 /*LUMIN_HIGH*/ )) {
         luminosity = 2;
     } else {
         luminosity = 1;
@@ -32,49 +32,44 @@ void sensors::capture(bool sd, bool gps) {
 
     // TEMPERATURE, HUMIDITY, PRESSURE
     float temperature, humidity, pressure;
-    BME280I2C bme;
+    ForcedClimate bme(Wire, 0x76);
     Wire.begin();
-    if(!bme.begin()) {
-        SENSOR_ERROR = true;
-        temperature = -32768;
-        humidity = -32768;
-        pressure = -32768;
-    } else {
-        temperature = bme.temp();
-        humidity = bme.hum();
-        pressure = bme.pres();
-    }
+    bme.begin();
+    bme.takeForcedMeasurement();
+    temperature = bme.getTemperatureCelcius();
+    humidity = bme.getRelativeHumidity();
+    pressure = bme.getPressure();
 
     // TEMPERATURE
-    if (config.getValue("TEMP_AIR") == 0){ // Temperature disabled
+    if (config.getValue(11 /*TEMP_AIR*/ ) == 0){ // Temperature disabled
         temperature = -32768;
     } else if (
             (temperature != -32768) and
-            ((temperature < config.getValue("MIN_TEMP_AIR")) or
-            (temperature > config.getValue("MAX_TEMP_AIR"))))
+            ((temperature < config.getValue(13 /*MIN_TEMP_AIR*/)) or
+            (temperature > config.getValue(15 /*MAX_TEMP_AIR*/))))
     {
         SENSOR_INCOHERENT = true;
         temperature = -32768;
     }
 
     // HUMIDITY
-    if (config.getValue("HYGR") == 0){ // Hygrometry disabled
+    if (config.getValue(17 /*HYGR*/) == 0){ // Hygrometry disabled
         humidity = -32768;
     } else if (
             (humidity != -32768) and
-            ((temperature < config.getValue("HYGR_MINT")) or
-            (temperature > config.getValue("HYGR_MAXT"))))
+            ((temperature < config.getValue(19 /*HYGR_MINT*/)) or
+            (temperature > config.getValue(21 /*HYGR_MAXT*/))))
     {
         humidity = -32768;
     }
 
     // PRESSURE
-    if (config.getValue("PRESSURE") == 0){ // Pressure disabled
+    if (config.getValue(23 /*PRESSURE*/) == 0){ // Pressure disabled
         pressure = -32768;
     } else if (
             (pressure != -32768) and
-            ((pressure < config.getValue("PRESSURE_MIN")) or
-            (pressure > config.getValue("PRESSURE_MAX"))))
+            ((pressure < config.getValue(25 /*PRESSURE_MIN*/)) or
+            (pressure > config.getValue(27 /*PRESSURE_MAX*/))))
     {
         SENSOR_INCOHERENT = true;
         pressure = -32768;
@@ -91,14 +86,17 @@ void sensors::capture(bool sd, bool gps) {
 
     // RTC
     RTC_DS1307 rtc;
+    String timestamp;
     if (!rtc.begin()) {
-        error |= 1;
+        RTC_ERROR = true;
+        timestamp = "NA";
+    } else {
+        timestamp = rtc.now().timestamp(DateTime::TIMESTAMP_FULL);
     }
-    DateTime now = rtc.now();
 
     // STRING
     String csv_string = "";
-    csv_string += now.timestamp(DateTime::TIMESTAMP_FULL) + ";";
+    csv_string += timestamp + ";";
     if (luminosity == 0) {
         csv_string += "L;";
     } else if (luminosity == 1) {
@@ -121,14 +119,13 @@ void sensors::capture(bool sd, bool gps) {
     } else {
         csv_string += String(pressure) + ";";
     }
-    csv_string += gps_data + "\n";
-
+    csv_string += gps_data;
 
     // SD
     if (sd) {
         // TODO
     } else {
-        Serial.print(csv_string);
+        Serial.println(csv_string);
     }
 
     // ERROR

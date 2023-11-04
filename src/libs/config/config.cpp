@@ -58,6 +58,18 @@ int Config::getValue(String key) {
     return -32768; // If user enters a wrong key, return -32768, min of int
 }
 
+int Config::getValue(int address) {
+    for (auto &i : configuration) {
+        if (i.eeprom_address == address) {
+            // retrieve the value from the eeprom
+            int value;
+            EEPROM.get(i.eeprom_address, value);
+            return value;
+        }
+    }
+    return -32768; // If user enters a wrong key, return -32768, min of int
+}
+
 bool Config::setValue(String key, int value) {
     for (auto &i : configuration) {
         if (i.key == key) {
@@ -88,7 +100,7 @@ void Config::printValues() {
     for (auto &i: configuration) {
         Serial.print(i.key);
         Serial.print(" : ");
-        Serial.println(getValue(i.key));
+        Serial.println(getValue(i.eeprom_address));
     }
 }
 

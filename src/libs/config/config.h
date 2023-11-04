@@ -20,6 +20,7 @@ public:
     Config();
 
     void init();
+    int getValue(int address);
     int getValue(String key);
     bool setValue(String key, int value);
     void resetValues();
