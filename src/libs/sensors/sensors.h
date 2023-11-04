@@ -7,7 +7,6 @@
 
 #include "Arduino.h"
 
-
 class sensors {
 public:
     void capture(bool sd, bool gps);

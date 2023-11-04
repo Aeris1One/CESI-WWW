@@ -4,13 +4,15 @@
 
 #include "sensors.h"
 #include <Arduino.h>
-//#include <SdFat.h>
+#include <SdFat.h>
 #include <globals.h>
 #include <forcedClimate.h>
 #include <Wire.h>
 #include <RTClib.h>
 
 #define LUMIN_PIN A0
+
+int filenumber = 0;
 
 void sensors::capture(bool sd, bool gps) {
     bool RTC_ERROR = false;
@@ -87,11 +89,15 @@ void sensors::capture(bool sd, bool gps) {
     // RTC
     RTC_DS1307 rtc;
     String timestamp;
+    String filename_base;
     if (!rtc.begin()) {
         RTC_ERROR = true;
         timestamp = "NA";
     } else {
-        timestamp = rtc.now().timestamp(DateTime::TIMESTAMP_FULL);
+        DateTime now = rtc.now();
+        timestamp = now.timestamp(DateTime::TIMESTAMP_FULL);
+        // format of filename_base : YYMMDD
+        filename_base = String(now.year() % 100) + String(now.month()) + String(now.day());
     }
 
     // STRING
@@ -122,9 +128,30 @@ void sensors::capture(bool sd, bool gps) {
     csv_string += gps_data;
 
     // SD
-    if (sd) {
-        // TODO
-    } else {
+    if (sd and !RTC_ERROR) { //can't write to SD if RTC is not working
+        SdFat sd_card;
+        if (!sd_card.begin(10, SPI_HALF_SPEED)) {
+            SD_ERROR = true;
+        }
+        if (sd_card.freeClusterCount() < 5) {
+            SD_FULL = true;
+        }
+
+        if (sd_card.exists(filename_base + "_0.csv")){
+            filenumber = 0;
+        }
+
+        File datafile = sd_card.open(filename_base + "_" + String(filenumber) + ".csv", FILE_WRITE);
+        if (!datafile) {
+            SD_ERROR = true;
+        } else {
+            datafile.println(csv_string);
+            if (datafile.size() > config.getValue(3 /*FILE_MAX_SIZE*/)) {
+                filenumber++;
+            }
+            datafile.close();
+        }
+    } else if (!sd) {
         Serial.println(csv_string);
     }
 
