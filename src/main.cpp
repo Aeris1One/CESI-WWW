@@ -10,6 +10,12 @@ ChainableLED led(8, 9, 1);
 
 #define VERSION "0.0.1"
 #define TimerInterval 50
+#define DEBUG true
+#if DEBUG
+#define LogIntervalUnit 1 // When debugging, LOG_INTERVAL is in seconds
+#else
+#define LogIntervalUnit 60 // In production, LOG_INTERVAL is in minutes
+#endif
 #define ConfigTimer (30000/TimerInterval)
 #define RedButtonPin 4
 #define GreenButtonPin 5
@@ -183,13 +189,13 @@ void loop() {
             }
             if (GREEN_LONG_FLAG) {
                 mode = 3;
-                capture_timer = config.getValue(1) * 2000 / TimerInterval;
+                capture_timer = config.getValue(1) * LogIntervalUnit * 2000 / TimerInterval;
                 reset_flags();
                 return;
             }
 
             if (capture_timer == 0) {
-                capture_timer = config.getValue(1) * 1000 / TimerInterval;
+                capture_timer = config.getValue(1) * LogIntervalUnit * 1000 / TimerInterval;
                 Serial.println("Capturing (normal)");
                 sensors.capture(true, true);
             }
@@ -198,7 +204,7 @@ void loop() {
         case 2: //configuration
             if (config_timer == 0) {
                 mode = 1;
-                capture_timer = config.getValue(1) * 1000 / TimerInterval;
+                capture_timer = config.getValue(1) * LogIntervalUnit * 1000 / TimerInterval;
                 return;
             }
             // retrieve commands from serial
@@ -268,13 +274,13 @@ void loop() {
             }
             if (GREEN_LONG_FLAG) {
                 mode = 1;
-                capture_timer = config.getValue(1) * 1000 / TimerInterval;
+                capture_timer = config.getValue(1) * LogIntervalUnit * 1000 / TimerInterval;
                 reset_flags();
                 return;
             }
 
             if (capture_timer == 0) {
-                capture_timer = config.getValue(1) * 2000 / TimerInterval;
+                capture_timer = config.getValue(1) * LogIntervalUnit * 2000 / TimerInterval;
                 sensors.capture(true, eco_gps_state);
                 eco_gps_state = !eco_gps_state;
             }
@@ -283,10 +289,10 @@ void loop() {
             if (RED_LONG_FLAG) {
                 if (previous_mode == 1){
                     mode = 1;
-                    capture_timer = config.getValue(1) * 1000 / TimerInterval;
+                    capture_timer = config.getValue(1) * LogIntervalUnit * 1000 / TimerInterval;
                 } else if (previous_mode == 3){
                     mode = 3;
-                    capture_timer = config.getValue(1) * 2000 / TimerInterval;
+                    capture_timer = config.getValue(1) * LogIntervalUnit * 2000 / TimerInterval;
                 }
                 reset_flags();
                 return;
