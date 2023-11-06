@@ -1,7 +1,3 @@
-//
-// Created by charlesp on 03/11/23.
-//
-
 #include "globals.h"
 
 volatile uint8_t error = 0;

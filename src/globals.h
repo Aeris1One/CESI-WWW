@@ -1,7 +1,3 @@
-//
-// Created by charlesp on 03/11/23.
-//
-
 #ifndef WWW_REWORKED_GLOBALS_H
 #define WWW_REWORKED_GLOBALS_H
 

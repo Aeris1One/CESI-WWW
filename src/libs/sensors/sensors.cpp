@@ -1,7 +1,3 @@
-//
-// Created by charlesp on 03/11/23.
-//
-
 #include "sensors.h"
 #include <Arduino.h>
 #include <SdFat.h>

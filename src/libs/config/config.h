@@ -1,7 +1,3 @@
-//
-// Created by charlesp on 01/11/23.
-//
-
 #ifndef WWW_REWORKED_CONFIG_H
 #define WWW_REWORKED_CONFIG_H
 

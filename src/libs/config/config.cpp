@@ -1,7 +1,3 @@
-//
-// Created by charlesp on 01/11/23.
-//
-
 #include "config.h"
 #include <EEPROM.h>
 
