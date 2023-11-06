@@ -23,9 +23,9 @@ void sensors::capture(bool sd, bool gps) {
     if (luminosity < config.getValue(7 /*LUMIN_LOW*/ )) {
         luminosity = 0;
     } else if (luminosity < config.getValue(9 /*LUMIN_HIGH*/ )) {
-        luminosity = 2;
-    } else {
         luminosity = 1;
+    } else {
+        luminosity = 2;
     }
 
     // TEMPERATURE, HUMIDITY, PRESSURE
